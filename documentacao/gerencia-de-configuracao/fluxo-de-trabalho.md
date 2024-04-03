@@ -28,7 +28,7 @@ As branches <b>feature</b> , acomodam adição ou modificação de funcionalidad
 As branches <b>hotfix</b>, acomodam correção de falhas/erros.
 
 - **[R5]** - Nome da branch deve começar com "hotfix-", mais o identificador da issue do card. ( hotfix-[NÚMERO DA ISSUE]-complemento. Sempre em letras minúsculas, sem acentos e caracteres especiais), Ex.: hotfix-2-correcao-na-funcao-de-exportacao.
-- **[R6]** - Deve ser criada a partir da branch Dev.
+- **[R6]** - Deve ser criada a partir da branch Dev ou Main.
 
 ### Branches controladas
 Essas branches não aceitam commits diretos e somente pessoas autorizadas podem modificá-las. 
