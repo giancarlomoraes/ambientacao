@@ -1,7 +1,9 @@
 package br.ufg.inf.onboarding.service;
 
+import br.ufg.inf.onboarding.exception.CustomException;
 import br.ufg.inf.onboarding.model.Pessoa;
 import br.ufg.inf.onboarding.repository.PessoaRepository;
+import br.ufg.inf.onboarding.validators.ValidationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,25 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-
     public Pessoa criarPessoa(Pessoa pessoa) {
+
+        if(Optional.ofNullable(pessoa.getNome()).isEmpty()){
+            throw CustomException.badRequest("Nome é obrigatório");
+        }
+        if(Optional.ofNullable(pessoa.getCpf()).isEmpty()){
+            throw CustomException.badRequest("CPF é obrigatório");
+        }
+
+        if(!ValidationUtils.cpfValido(pessoa.getCpf())){
+            throw CustomException.badRequest("CPF inválido");
+        }
+
+        pessoa.setCpf(pessoa.getCpf().replaceAll("[.-]", ""));
+
+        if(pessoaRepository.findPessoaByCpfEquals(pessoa.getCpf()) != null){
+            throw CustomException.badRequest("CPF já cadastrado");
+        }
+
         return pessoaRepository.save(pessoa);
     }
 

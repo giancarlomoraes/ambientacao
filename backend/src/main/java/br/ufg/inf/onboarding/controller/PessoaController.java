@@ -1,8 +1,10 @@
 package br.ufg.inf.onboarding.controller;
 
+import br.ufg.inf.onboarding.dto.PessoaDto;
 import br.ufg.inf.onboarding.model.Pessoa;
 import br.ufg.inf.onboarding.service.PessoaService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class PessoaController {
 
     private final PessoaService pessoaService;
+    private final ModelMapper modelMapper;
 
     @PostMapping
-    public Pessoa criarPessoa(@RequestBody Pessoa pessoa) {
-        return pessoaService.criarPessoa(pessoa);
+    public PessoaDto criarPessoa(@RequestBody PessoaDto pessoaDto) {
+        return modelMapper.map(pessoaService.criarPessoa(modelMapper.map(pessoaDto, Pessoa.class)), PessoaDto.class);
     }
 
     @GetMapping("/{id}")
