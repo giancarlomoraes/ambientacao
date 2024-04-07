@@ -18,6 +18,6 @@ public interface PessoaRepository extends PagingAndSortingRepository<Pessoa,Inte
     Pessoa findPessoaByCpfEquals(String cpf);
 
 
-    @Query("select p from Pessoa p where lower(p.nome) like lower(concat('%', 'Gian', '%')) order by p.nome")
+    @Query("select p from Pessoa p where lower(p.nome) like lower(concat('%', :busca, '%')) order by p.nome")
     Page<Pessoa> findAll(String busca, Pageable pageable);
 }
