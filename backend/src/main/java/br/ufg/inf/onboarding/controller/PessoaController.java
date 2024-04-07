@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/usuarios")
 @AllArgsConstructor
@@ -18,8 +20,13 @@ public class PessoaController {
     private final ModelMapper modelMapper;
 
     @PostMapping
-    public PessoaDto criarPessoa(@RequestBody PessoaDto pessoaDto) {
+    public PessoaDto criarPessoa(@RequestBody @Valid PessoaDto pessoaDto) {
         return modelMapper.map(pessoaService.criarPessoa(modelMapper.map(pessoaDto, Pessoa.class)), PessoaDto.class);
+    }
+
+    @PutMapping("/{id}")
+    public PessoaDto editarPessoa(@RequestBody @Valid PessoaDto pessoaDto) {
+        return modelMapper.map(pessoaService.editarPessoa(modelMapper.map(pessoaDto, Pessoa.class)), PessoaDto.class);
     }
 
     @GetMapping("/{id}")

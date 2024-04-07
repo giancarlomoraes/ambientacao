@@ -42,6 +42,32 @@ public class PessoaService {
         return pessoaRepository.save(pessoa);
     }
 
+    public Pessoa editarPessoa(Pessoa pessoa) {
+
+        if(Optional.ofNullable(pessoa.getId()).isEmpty()){
+            throw CustomException.badRequest("Id é obrigatório");
+        }
+
+        if(Optional.ofNullable(pessoa.getNome()).isEmpty()){
+            throw CustomException.badRequest("Nome é obrigatório");
+        }
+        if(Optional.ofNullable(pessoa.getCpf()).isEmpty()){
+            throw CustomException.badRequest("CPF é obrigatório");
+        }
+
+        if(!ValidationUtils.cpfValido(pessoa.getCpf())){
+            throw CustomException.badRequest("CPF inválido");
+        }
+
+        pessoa.setCpf(pessoa.getCpf().replaceAll("[.-]", ""));
+
+        if(pessoaRepository.findPessoaByCpfEquals(pessoa.getCpf(), pessoa.getId()) != null){
+            throw CustomException.badRequest("CPF já cadastrado");
+        }
+
+        return pessoaRepository.save(pessoa);
+    }
+
     public Pessoa findById(Integer id) {
         Optional<Pessoa> pessoa = pessoaRepository.findById(id);
 

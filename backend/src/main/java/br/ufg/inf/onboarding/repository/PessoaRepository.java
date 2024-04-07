@@ -17,6 +17,9 @@ public interface PessoaRepository extends PagingAndSortingRepository<Pessoa,Inte
     @Description("Retorna a pessoa com o CPF fornecido")
     Pessoa findPessoaByCpfEquals(String cpf);
 
+    @Query("select p from Pessoa p where p.cpf = :cpf and p.id != :id")
+    Pessoa findPessoaByCpfEquals(String cpf, Integer id);
+
 
     @Query("select p from Pessoa p where lower(p.nome) like lower(concat('%', :busca, '%')) order by p.nome")
     Page<Pessoa> findAll(String busca, Pageable pageable);
