@@ -1,5 +1,6 @@
 package br.ufg.inf.onboarding;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -30,5 +31,10 @@ public class AppConfiguration {
     public RepositoryRestConfigurer repositoryRestConfigurer() {
         return RepositoryRestConfigurer
                 .withConfig(config -> config.exposeIdsFor(entityManager.getMetamodel().getEntities().stream().map(Type::getJavaType).toArray(Class[]::new)));
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
