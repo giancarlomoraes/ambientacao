@@ -1,12 +1,16 @@
 package br.ufg.inf.onboarding.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name="PESSOA")
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Pessoa {
     @Id
     @GeneratedValue

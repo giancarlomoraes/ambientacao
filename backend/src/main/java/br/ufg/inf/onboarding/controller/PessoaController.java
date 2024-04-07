@@ -3,6 +3,7 @@ package br.ufg.inf.onboarding.controller;
 import br.ufg.inf.onboarding.dto.PessoaDto;
 import br.ufg.inf.onboarding.model.Pessoa;
 import br.ufg.inf.onboarding.service.PessoaService;
+import br.ufg.inf.onboarding.util.paginacao.Paginated;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +23,16 @@ public class PessoaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pessoa> findById(@PathVariable Integer id) {
-        return pessoaService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public PessoaDto findById(@PathVariable Integer id) {
+        return modelMapper.map(pessoaService.findById(id), PessoaDto.class);
     }
 
     @GetMapping
-    public Iterable<Pessoa> getAll() {
-        return pessoaService.getAll();
+    public ResponseEntity<Paginated> getAll(@RequestParam(defaultValue = "0") int pagina,
+                                                    @RequestParam(defaultValue = "10") int tamanhoPagina,
+                                                    @RequestParam(required = false, defaultValue = "") String busca
+    ) {
+        return ResponseEntity.ok(pessoaService.getAll(pagina, tamanhoPagina, busca));
     }
 
     @GetMapping("/cpf/{cpf}")

@@ -3,8 +3,13 @@ package br.ufg.inf.onboarding.service;
 import br.ufg.inf.onboarding.exception.CustomException;
 import br.ufg.inf.onboarding.model.Pessoa;
 import br.ufg.inf.onboarding.repository.PessoaRepository;
+import br.ufg.inf.onboarding.util.paginacao.Pageable;
+import br.ufg.inf.onboarding.util.paginacao.Paginated;
 import br.ufg.inf.onboarding.validators.ValidationUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -37,12 +42,24 @@ public class PessoaService {
         return pessoaRepository.save(pessoa);
     }
 
-    public Optional<Pessoa> findById(Integer id) {
-        return pessoaRepository.findById(id);
+    public Pessoa findById(Integer id) {
+        Optional<Pessoa> pessoa = pessoaRepository.findById(id);
+
+        if(pessoa.isEmpty()){
+            throw CustomException.badRequest("Usuário não encontrado");
+        }
+
+        return pessoa.get();
     }
 
-    public Iterable<Pessoa> getAll() {
-        return pessoaRepository.findAll();
+    public Paginated getAll(int pagina, int tamanhoPagina, String busca) {
+
+        Pageable pageable = new Pageable(pagina, tamanhoPagina);
+
+        Page<Pessoa> pessoas = pessoaRepository.findAll(busca, PageRequest.of(pageable.getPagina(), pageable.getTamanhoPagina()));
+
+        return Pageable.of(pessoas.getTotalElements(), pageable, pessoas.getContent().stream().map(pessoa -> new Pessoa(
+                pessoa.getId(), pessoa.getNome(), pessoa.getCpf())).toList());
     }
 
     public Pessoa findByCpf(String cpf) {
